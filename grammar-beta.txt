@@ -1,0 +1,49 @@
+Sigma
+Space
+Tab
+Newline
+INITIAL == Expr
+Sign == + | -
+Dig == 0 |  ... | 9
+Let == _ | a | ... | z | A | ... | Z
+Spc == Space | Tab | Newline
+Ident == Let (Let | Dig)*
+TypeIdent == Ident
+NameIdent == Ident
+CharVal == 'sigma/["\]' | '\Sigma'
+StrVal == "(sigma/["\] | \sigma)*"
+IntVal == Sign*Dig+
+FloatVal == IntVal | IntVal.Dig
+BoolVal == true | false
+StructVal == TypeIdent { } | TypeIdent { (NameIdent = Expr ,)* NameIdent = Expr }
+ArrayVal == []TypeIdent { } | []TypeIdent { (Expr ,)* Expr }
+Value == FuncVal | void | CharVal | StrVal | IntVal | BoolVal | StructVal | ArrayVal
+Operator0 == ||
+Operator1 == &&
+Operator2 ==  <= | >= | < | > | == | !=
+Operator3 ==  | | & | ~ | ^ | !
+Operator4 == * | / | %
+Operator5 == + | -
+Expr == Expr0
+Expr0 == Expr1 | Expr0 Operator0 Expr1
+Expr1 == Expr2 | Expr1 Operator1 Expr2
+Expr2 == Expr3 | Expr2 Operator2 Expr3
+Expr3 == Expr4 | Expr3 Operator3 Expr4
+Expr4 == Expr5 | Expr4 Operator4 PrimeExpr
+Expr5 == PrimeExpr | Expr5 Operator5 PrimeExpr
+PrimeExpr == epsilon | Value | NameIdent | VardefExpr | AssignExpr | FuncExpr | ForExpr | WhileExpr | IfExpr | ElseExpr | BreakExpr | ContinueExpr | ReturnExpr | StructExpr | ( Expr ) | { ExprBlock } | FieldExpr | IndexingExpr | CommentExpr
+CommentExpr == // (sigma/Newline)*
+FieldExpr == Expr . NameIdent
+IndexingExpr == Expr [ Expr ]
+StructExpr == struct { } | struct { ( TypeIdent NameIdent ,)* TypeIdent NameIdent }
+FuncExpr == TypeIdent () { ExprBlock } | TypeIdent ( (TypeIdent NameIdent ,)* TypeIdent NameIdent ) { ExprBlock }
+FuncVal == NameIdent ( ) | NameIdent ( (Expr ,)* Expr )
+VardefExpr == TypeIdent Spc NameIdent
+AssignExpr == Expr = Expr
+ExprBlock == ( Expr ;)* Expr
+ForExpr == for ( Expr ; Expr ; Expr ) { ExprBlock }
+IfExpr == if ( Expr ) Expr | if ( Expr ) { ExprBlock }
+ElseExpr == else Expr | else { ExprBlock }
+BreakExpr == break
+ContinueExpr == continue
+ReturnExpr == return Spc Expr
